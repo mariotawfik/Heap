@@ -14,13 +14,17 @@ myHeap::myHeap()
 {
     cout << "Please enter the size of the tree " << endl;
     cin >> treeSize;
-    data = new int(treeSize+1);
-    nextFreeSlot = 1;
+    data = new int[treeSize+1];
+    currentSlot = 1;
+    headElement = true;
+    for(int i = 0; i < treeSize+1; i++){
+        data[i] = -1;
+    }
 }
 
 myHeap::~myHeap()
 {
-    delete data;
+    delete[] data;
 }
 
 int myHeap::LeftSon(int i)
@@ -43,7 +47,7 @@ int myHeap::RightSon(int i)
 
 int myHeap::Parent(int i)
 {
-    if((i/2) <= 0){
+    if(((int)(i/2)) <= 0){
         return -1;
     }else{
         return (i/2);
@@ -65,26 +69,13 @@ int myHeap::Swap(int i, int j)
 
 int myHeap::push(int x)
 {
-    if(nextFreeSlot != -1){
-        data[nextFreeSlot] = x;
-        int currentSlotOfElement;
-        if(checkParent(x))
+    currentSlot = nextFreeSlot();
+    if(currentSlot != -1){
+        data[currentSlot] = x;
+        while(checkParent(data[currentSlot]))
         {
-            Swap(nextFreeSlot, Parent(nextFreeSlot));
-            currentSlotOfElement = Parent(nextFreeSlot);
-            while(checkParent(data[currentSlotOfElement]))
-            {
-                Swap(currentSlotOfElement, Parent(currentSlotOfElement));
-                currentSlotOfElement = Parent(currentSlotOfElement);
-            }
-        }
-        if(nextFreeSlot != treeSize+1){
-            while(data[nextFreeSlot] != NULL)
-            {
-                nextFreeSlot += 1;
-            }
-        }else{
-            nextFreeSlot = -1;
+            Swap(currentSlot, Parent(currentSlot));
+            currentSlot = Parent(currentSlot);
         }
         return 0;
     }else{
@@ -96,9 +87,10 @@ int myHeap::push(int x)
 
 bool myHeap::checkParent(int x)
 {
-    if(x > data[Parent(nextFreeSlot)])
+    if(Parent(currentSlot) != -1)
     {
-        if(Parent(nextFreeSlot) != -1){
+        if(x > data[Parent(currentSlot)])
+        {
             return 1;
         }else{
             return 0;
@@ -119,4 +111,60 @@ string myHeap::toString()
     string heapOutput(os.str());
     
     return heapOutput;
+}
+
+int myHeap::nextFreeSlot()
+{
+    if(currentSlot == 1 && headElement){
+        headElement = false;
+        return 1;
+    }else{
+        if(currentSlot > treeSize+1){
+            return -1;
+        }else{
+            int i = 1;
+            while(data[i] != -1 && i <= treeSize+1){
+                i++;
+            }
+            return i;
+        }
+    }
+}
+
+int myHeap::pop()
+{
+    int removedRoot = data[1];
+    data[1] = -1;
+    ReversedSwap(1);
+    return removedRoot;
+}
+
+bool myHeap::checkSon(int i)
+{
+    if(data[LeftSon(i)] != -1 && data[RightSon(i)] != -1)
+    {
+        if(data[LeftSon(i)] > data[RightSon(i)])
+        {
+            biggerSon = LeftSon(i);
+        }else{
+            biggerSon = RightSon(i);
+        }
+        if((data[LeftSon(i)] > data[i]) || (data[RightSon(i)] > data[i]))
+        {
+            return 1;
+        }else{
+            return 0;
+        }
+    }else{
+        return 0;
+    }
+}
+
+void myHeap::ReversedSwap(int Head)
+{
+    while(checkSon(Head))
+    {
+        Swap(biggerSon, Head);
+        Head = biggerSon;
+    }
 }

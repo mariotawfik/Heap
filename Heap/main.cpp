@@ -13,7 +13,15 @@ int main() {
     myHeap A;
     A.push(10);
     A.push(5);
-    A.push(6);
-    A.push(11);
+    A.push(20);
+    A.push(15);
+    A.push(30);
+    A.push(100);
+    A.push(10);
+    A.push(5);
+    A.push(20);
+    A.push(15);
+    A.push(30);
+    A.pop();
     cout << A.toString();
 }
