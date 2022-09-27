@@ -70,7 +70,7 @@ int myHeap::Swap(int i, int j)
 int myHeap::push(int x)
 {
     currentSlot = nextFreeSlot();
-    if(currentSlot != -1){
+    if(currentSlot != -1 && currentSlot < treeSize+1){
         data[currentSlot] = x;
         while(checkParent(data[currentSlot]))
         {
@@ -119,11 +119,11 @@ int myHeap::nextFreeSlot()
         headElement = false;
         return 1;
     }else{
-        if(currentSlot > treeSize+1){
+        if(currentSlot >= treeSize+1){
             return -1;
         }else{
             int i = 1;
-            while(data[i] != -1 && i <= treeSize+1){
+            while(data[i] != -1){
                 i++;
             }
             return i;

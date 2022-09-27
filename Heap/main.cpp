@@ -22,6 +22,7 @@ int main() {
     A.push(20);
     A.push(15);
     A.push(30);
+    cout << A.toString() << endl;
     A.pop();
     cout << A.toString();
 }
