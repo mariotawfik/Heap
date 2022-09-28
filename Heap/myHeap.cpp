@@ -141,13 +141,39 @@ int myHeap::pop()
 
 bool myHeap::checkSon(int i)
 {
-    if(data[LeftSon(i)] != -1 && data[RightSon(i)] != -1)
+    bool oneSon = false;
+    if(data[LeftSon(i)] != -1 || data[RightSon(i)] != -1)
     {
-        if(data[LeftSon(i)] > data[RightSon(i)])
+        if(data[LeftSon(i)] != -1 && data[RightSon(i)] == -1)
         {
-            biggerSon = LeftSon(i);
-        }else{
+            oneSon = true;
             biggerSon = RightSon(i);
+            if((data[LeftSon(i)] > data[i])){
+                return 1;
+            }else{
+                return 0;
+            }
+        }else{
+            if(data[LeftSon(i)] == -1 && data[RightSon(i)] != -1)
+            {
+                oneSon = true;
+                biggerSon = LeftSon(i);
+                if((data[RightSon(i)] > data[i])){
+                    return 1;
+                }else{
+                    return 0;
+                }
+            }else{
+                oneSon = false;
+            }
+        }
+        if(oneSon == false){
+            if((data[LeftSon(i)] > data[RightSon(i)]))
+            {
+                biggerSon = LeftSon(i);
+            }else{
+                biggerSon = RightSon(i);
+            }
         }
         if((data[LeftSon(i)] > data[i]) || (data[RightSon(i)] > data[i]))
         {
@@ -160,11 +186,11 @@ bool myHeap::checkSon(int i)
     }
 }
 
-void myHeap::ReversedSwap(int Head)
-{
-    while(checkSon(Head))
+    void myHeap::ReversedSwap(int Head)
     {
-        Swap(biggerSon, Head);
-        Head = biggerSon;
+        while(checkSon(Head))
+        {
+            Swap(biggerSon, Head);
+            Head = biggerSon;
+        }
     }
-}
