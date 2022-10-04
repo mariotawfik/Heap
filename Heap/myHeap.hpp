@@ -33,5 +33,6 @@ public:
     int push(int x);    // adds a new element ; returns 0 if success, -1 if failure
     int pop();          // Gets the value of the root element and removes it from the heap
     string toString();  // textual representation of the contents of the heap - for display & debug purposes mainly
+    bool VerifyHeap();
 };
 #endif /* myHeap_hpp */

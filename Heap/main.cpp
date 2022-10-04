@@ -20,17 +20,16 @@ int main() {
 // Test #1 : heap interface works properly
 // --------------------------------------------------------
     int numberOfItems = 50;
-    int t;
     for (int i = 0 ; i < numberOfItems ; i++)
     {
         h->push(rand() % 1000);
     }
     int whereAmI = -1;
     int lastPopped;
-    cout << h->toString() << endl << endl;
+    cout << h->toString() << endl << endl << endl;
     for (int i = 0 ; i < numberOfItems ; i++)
     {
-        lastPopped = h->pop();
+        assert(lastPopped = h->pop());
         cout << lastPopped << endl;
         cout << h->toString() << endl << endl;
         whereAmI = lastPopped;
@@ -46,6 +45,25 @@ int main() {
     for (int i = 0 ; i < 10001 ; i++)
     {
         h->push(rand() % 1000 );
+        cout << h->toString() << endl;
+    }
+    for (int i = 0 ; i < numberOfItems ; i++)
+    {
+        h->pop();
     }
 // ...
+    for (int i = 0 ; i < numberOfItems ; i++)
+    {
+        h->push(rand() % 1000 );
+        h->VerifyHeap();
+    }
+    cout << "Push test successful" << endl;
+    cout << h->toString() << endl;
+    for (int i = 0 ; i < numberOfItems ; i++)
+    {
+        h->pop();
+        cout << h->toString() << endl;
+        assert(h->VerifyHeap());
+    }
+    cout << "Pop test successful" << endl;
 }

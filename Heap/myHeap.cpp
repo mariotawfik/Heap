@@ -77,6 +77,9 @@ int myHeap::push(int x)
             Swap(currentSlot, Parent(currentSlot));
             currentSlot = Parent(currentSlot);
         }
+        if(currentSlot == treeSize){
+            currentSlot++;
+        }
         return 0;
     }else{
         cout << "The Tree is full please make a new one" << endl;
@@ -133,57 +136,64 @@ int myHeap::nextFreeSlot()
 
 int myHeap::pop()
 {
-    int removedRoot = data[1];
-    data[1] = -1;
-    ReversedSwap(1);
-    return removedRoot;
+    if(data[1] != -1){
+        int removedRoot = data[1];
+        currentSlot = treeSize;
+        data[1] = data[currentSlot];
+        data[currentSlot] = -1;
+        currentSlot--;
+        ReversedSwap(1);
+        return removedRoot;
+    }else{
+        return -1;
+    }
 }
 
 bool myHeap::checkSon(int i)
 {
     bool oneSon = false;
-    if(data[LeftSon(i)] != -1 || data[RightSon(i)] != -1)
-    {
-        if(data[LeftSon(i)] != -1 && data[RightSon(i)] == -1)
+        if((data[LeftSon(i)] != -1 || data[RightSon(i)] != -1) && (LeftSon(i) != -1 && RightSon(i) != -1))
         {
-            oneSon = true;
-            biggerSon = RightSon(i);
-            if((data[LeftSon(i)] > data[i])){
-                return 1;
-            }else{
-                return 0;
-            }
-        }else{
-            if(data[LeftSon(i)] == -1 && data[RightSon(i)] != -1)
+            if(data[LeftSon(i)] != -1 && data[RightSon(i)] == -1)
             {
                 oneSon = true;
                 biggerSon = LeftSon(i);
-                if((data[RightSon(i)] > data[i])){
+                if((data[LeftSon(i)] > data[i])){
                     return 1;
                 }else{
                     return 0;
                 }
             }else{
-                oneSon = false;
+                if(data[LeftSon(i)] == -1 && data[RightSon(i)] != -1)
+                {
+                    oneSon = true;
+                    biggerSon = RightSon(i);
+                    if((data[RightSon(i)] > data[i])){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                }else{
+                    oneSon = false;
+                }
             }
-        }
-        if(oneSon == false){
-            if((data[LeftSon(i)] > data[RightSon(i)]))
+            if(oneSon == false){
+                if((data[LeftSon(i)] > data[RightSon(i)]))
+                {
+                    biggerSon = LeftSon(i);
+                }else{
+                    biggerSon = RightSon(i);
+                }
+            }
+            if((data[LeftSon(i)] > data[i]) || (data[RightSon(i)] > data[i]))
             {
-                biggerSon = LeftSon(i);
+                return 1;
             }else{
-                biggerSon = RightSon(i);
+                return 0;
             }
-        }
-        if((data[LeftSon(i)] > data[i]) || (data[RightSon(i)] > data[i]))
-        {
-            return 1;
         }else{
             return 0;
         }
-    }else{
-        return 0;
-    }
 }
 
     void myHeap::ReversedSwap(int Head)
@@ -193,4 +203,23 @@ bool myHeap::checkSon(int i)
             Swap(biggerSon, Head);
             Head = biggerSon;
         }
+    }
+    bool myHeap::VerifyHeap()
+    {
+        int currentIndex = 1;
+        while(LeftSon(currentIndex) != -1)
+        {
+            if (data[currentIndex] < data[LeftSon(currentIndex)])
+                return false;
+            currentIndex = LeftSon(currentIndex);
+        }
+        currentIndex = 1;
+        while(RightSon(currentIndex) != -1)
+        {
+            if (data[currentIndex] < data[RightSon(currentIndex)])
+                return false;
+            currentIndex = RightSon(currentIndex);
+        }
+        // same for right
+        return true;
     }
