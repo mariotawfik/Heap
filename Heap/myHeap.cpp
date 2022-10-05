@@ -17,7 +17,7 @@ myHeap<type>::myHeap()
     currentSlot = 1;
     headElement = true;
     for(int i = 0; i < treeSize+1; i++){
-        data[i] = NULL;
+        data[i] = 0;
     }
 }
 
@@ -74,6 +74,10 @@ int myHeap<type>::Swap(int i, int j)
 template <class type>
 int myHeap<type>::push(type x)
 {
+    if(x == 0)
+    {
+        nullMessage();
+    }
     currentSlot = nextFreeSlot();
     if(currentSlot != -1 && currentSlot < treeSize+1){
         data[currentSlot] = x;
@@ -133,7 +137,7 @@ int myHeap<type>::nextFreeSlot()
             return -1;
         }else{
             int i = 1;
-            while(data[i] != NULL){
+            while(data[i] != 0){
                 i++;
             }
             return i;
@@ -144,11 +148,11 @@ int myHeap<type>::nextFreeSlot()
 template <class type>
 type myHeap<type>::pop()
 {
-    if(data[1] != NULL){
+    if(data[1] != 0){
         type removedRoot = data[1];
         currentSlot = treeSize;
         data[1] = data[currentSlot];
-        data[currentSlot] = NULL;
+        data[currentSlot] = 0;
         currentSlot--;
         ReversedSwap(1);
         return removedRoot;
@@ -161,9 +165,9 @@ template <class type>
 bool myHeap<type>::checkSon(int i)
 {
     bool oneSon = false;
-        if((data[LeftSon(i)] != NULL || data[RightSon(i)] != NULL) && (LeftSon(i) != -1 && RightSon(i) != -1))
+        if((data[LeftSon(i)] != 0 || data[RightSon(i)] != 0) && (LeftSon(i) != -1 && RightSon(i) != -1))
         {
-            if(data[LeftSon(i)] != NULL && data[RightSon(i)] == NULL)
+            if(data[LeftSon(i)] != 0 && data[RightSon(i)] == 0)
             {
                 oneSon = true;
                 biggerSon = LeftSon(i);
@@ -173,7 +177,7 @@ bool myHeap<type>::checkSon(int i)
                     return 0;
                 }
             }else{
-                if(data[LeftSon(i)] == NULL && data[RightSon(i)] != NULL)
+                if(data[LeftSon(i)] == 0 && data[RightSon(i)] != 0)
                 {
                     oneSon = true;
                     biggerSon = RightSon(i);
@@ -261,5 +265,11 @@ template <class type>
                 break;
         }
         
+        cout << endl << "*NOTE* NULL value is set as 0" << endl;
     }
 
+    template <class type>
+    void myHeap<type>::nullMessage()
+    {
+        cout << "You entered a null value, no changes were made" << endl;
+        }

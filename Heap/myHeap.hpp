@@ -27,6 +27,7 @@ private:
     int biggerSon; // Keeps track of the bigger son of a parent; useful for the pop function
     void ReversedSwap(int Head); //
     bool isMaximumHeap;
+    void nullMessage();
 
 public:
     myHeap();
