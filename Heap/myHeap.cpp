@@ -4,30 +4,31 @@
 //
 //  Created by Mary Tamry on 07.09.22.
 //
-
 #include "myHeap.hpp"
 #include <sstream>
 #include <iostream>
 using namespace std;
 
-myHeap::myHeap()
+template <class type>
+myHeap<type>::myHeap()
 {
-    cout << "Please enter the size of the tree " << endl;
-    cin >> treeSize;
-    data = new int[treeSize+1];
+    heapInterface();
+    data = new type[treeSize+1];
     currentSlot = 1;
     headElement = true;
     for(int i = 0; i < treeSize+1; i++){
-        data[i] = -1;
+        data[i] = NULL;
     }
 }
 
-myHeap::~myHeap()
+template <class type>
+myHeap<type>::~myHeap()
 {
     delete[] data;
 }
 
-int myHeap::LeftSon(int i)
+template <class type>
+int myHeap<type>::LeftSon(int i)
 {
     if((2*i) < treeSize){
         return (2*i);
@@ -36,7 +37,8 @@ int myHeap::LeftSon(int i)
     }
 }
 
-int myHeap::RightSon(int i)
+template <class type>
+int myHeap<type>::RightSon(int i)
 {
     if(((2*i)+1) < treeSize){
         return ((2*i)+1);
@@ -45,7 +47,8 @@ int myHeap::RightSon(int i)
     }
 }
 
-int myHeap::Parent(int i)
+template <class type>
+int myHeap<type>::Parent(int i)
 {
     if(((int)(i/2)) <= 0){
         return -1;
@@ -54,9 +57,10 @@ int myHeap::Parent(int i)
     }
 }
 
-int myHeap::Swap(int i, int j)
+template <class type>
+int myHeap<type>::Swap(int i, int j)
 {
-    int tempVar = data[i];
+    type tempVar = data[i];
     if(data[i] > data[j])
     {
         data[i] = data[j];
@@ -67,7 +71,8 @@ int myHeap::Swap(int i, int j)
     }
 }
 
-int myHeap::push(int x)
+template <class type>
+int myHeap<type>::push(type x)
 {
     currentSlot = nextFreeSlot();
     if(currentSlot != -1 && currentSlot < treeSize+1){
@@ -87,8 +92,8 @@ int myHeap::push(int x)
     }
 }
 
-
-bool myHeap::checkParent(int x)
+template <class type>
+bool myHeap<type>::checkParent(type x)
 {
     if(Parent(currentSlot) != -1)
     {
@@ -103,7 +108,8 @@ bool myHeap::checkParent(int x)
     }
 }
 
-string myHeap::toString()
+template <class type>
+string myHeap<type>::toString()
 {
     ostringstream os;
     for(int i = 1; i < treeSize+1; i++)
@@ -116,7 +122,8 @@ string myHeap::toString()
     return heapOutput;
 }
 
-int myHeap::nextFreeSlot()
+template <class type>
+int myHeap<type>::nextFreeSlot()
 {
     if(currentSlot == 1 && headElement){
         headElement = false;
@@ -126,7 +133,7 @@ int myHeap::nextFreeSlot()
             return -1;
         }else{
             int i = 1;
-            while(data[i] != -1){
+            while(data[i] != NULL){
                 i++;
             }
             return i;
@@ -134,13 +141,14 @@ int myHeap::nextFreeSlot()
     }
 }
 
-int myHeap::pop()
+template <class type>
+type myHeap<type>::pop()
 {
-    if(data[1] != -1){
-        int removedRoot = data[1];
+    if(data[1] != NULL){
+        type removedRoot = data[1];
         currentSlot = treeSize;
         data[1] = data[currentSlot];
-        data[currentSlot] = -1;
+        data[currentSlot] = NULL;
         currentSlot--;
         ReversedSwap(1);
         return removedRoot;
@@ -149,12 +157,13 @@ int myHeap::pop()
     }
 }
 
-bool myHeap::checkSon(int i)
+template <class type>
+bool myHeap<type>::checkSon(int i)
 {
     bool oneSon = false;
-        if((data[LeftSon(i)] != -1 || data[RightSon(i)] != -1) && (LeftSon(i) != -1 && RightSon(i) != -1))
+        if((data[LeftSon(i)] != NULL || data[RightSon(i)] != NULL) && (LeftSon(i) != -1 && RightSon(i) != -1))
         {
-            if(data[LeftSon(i)] != -1 && data[RightSon(i)] == -1)
+            if(data[LeftSon(i)] != NULL && data[RightSon(i)] == NULL)
             {
                 oneSon = true;
                 biggerSon = LeftSon(i);
@@ -164,7 +173,7 @@ bool myHeap::checkSon(int i)
                     return 0;
                 }
             }else{
-                if(data[LeftSon(i)] == -1 && data[RightSon(i)] != -1)
+                if(data[LeftSon(i)] == NULL && data[RightSon(i)] != NULL)
                 {
                     oneSon = true;
                     biggerSon = RightSon(i);
@@ -196,7 +205,8 @@ bool myHeap::checkSon(int i)
         }
 }
 
-    void myHeap::ReversedSwap(int Head)
+template <class type>
+    void myHeap<type>::ReversedSwap(int Head)
     {
         while(checkSon(Head))
         {
@@ -204,7 +214,9 @@ bool myHeap::checkSon(int i)
             Head = biggerSon;
         }
     }
-    bool myHeap::VerifyHeap()
+
+template <class type>
+    bool myHeap<type>::VerifyHeap()
     {
         int currentIndex = 1;
         while(LeftSon(currentIndex) != -1)
@@ -220,6 +232,34 @@ bool myHeap::checkSon(int i)
                 return false;
             currentIndex = RightSon(currentIndex);
         }
-        // same for right
+
         return true;
     }
+
+template <class type>
+    void myHeap<type>::heapInterface()
+    {
+        cout << "Please enter the size of the heap" << endl;
+        cin >> treeSize;
+        
+        cout << "Do you want a minimum or maximum heap? Choose 1 for minimum heap or 2 for maximum heap" << endl;
+        int option;
+        cin >> option;
+        switch (option) {
+            case 1:
+                isMaximumHeap = false;
+                break;
+            case 2:
+                isMaximumHeap = true;
+                break;
+            default:
+                while(option != 1 && option != 2)
+                {
+                    cout << "Please a valid option (1/2)" << endl;
+                    cin >> option;
+                }
+                break;
+        }
+        
+    }
+
